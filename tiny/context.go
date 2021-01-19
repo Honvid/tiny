@@ -67,7 +67,7 @@ func (c *Context) Cookie(name string) (string, error) {
 	return val, nil
 }
 
-func (c *Context) Fail(code int, message string)  {
+func (c *Context) Fail(code int, message string) {
 	c.StatusCode = code
 	c.SetHeader("Content-Type", "text/plain")
 	c.Writer.Write([]byte(fmt.Sprint(message)))

@@ -13,11 +13,8 @@ import (
 
 func onlyForV2() tiny.Handler {
 	return func(c *tiny.Context) {
-		// Start timer
 		t := time.Now()
-		// if a server error occurred
 		c.Fail(500, "Internal Server Error")
-		// Calculate resolution time
 		log.Printf("[%d] %s in %v for group v2", c.StatusCode, c.Request.RequestURI, time.Since(t))
 	}
 }
@@ -48,7 +45,6 @@ func main() {
 		})
 
 		v1.GET("/hello", func(c *tiny.Context) {
-			// expect /hello?name=geektutu
 			c.String(http.StatusOK, "hello %s, you're at %s\n", c.Query("name"), c.Path)
 		})
 	}
@@ -56,7 +52,6 @@ func main() {
 	v2.Use(onlyForV2())
 	{
 		v2.GET("/hello/:name", func(c *tiny.Context) {
-			// expect /hello/geektutu
 			c.String(http.StatusOK, "hello %s, you're at %s\n", c.Segment("name"), c.Path)
 		})
 		v2.POST("/login", func(c *tiny.Context) {
@@ -71,8 +66,6 @@ func main() {
 	r.Static("/assets", "./tiny")
 
 	r.GET("/panic", func(c *tiny.Context) {
-		//fmt.Println("3")
-		//panic("eror is error")
 		names := []string{"geektutu"}
 		c.String(http.StatusOK, names[100])
 	})
@@ -94,7 +87,7 @@ func main() {
 		hour := c.Segment("hour")
 		c.String(http.StatusOK, "re3 year: %s, month: %s, day: %s, hour: %s", year, month, day, hour)
 	})
-	
+
 	srv := &http.Server{
 		Addr:    ":9999",
 		Handler: r,
