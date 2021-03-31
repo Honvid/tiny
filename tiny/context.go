@@ -103,7 +103,7 @@ func (c *Context) JSON(code int, obj interface{}) {
 	c.SetHeader("Content-Type", "application/json")
 	encoder := json.NewEncoder(c.Writer)
 	if err := encoder.Encode(obj); err != nil {
-		http.Error(c.Writer, err.Error(), 500)
+		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
 	}
 }
 

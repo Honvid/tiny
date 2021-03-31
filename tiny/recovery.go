@@ -2,6 +2,7 @@ package tiny
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"runtime"
 	"strings"
@@ -26,7 +27,7 @@ func Recovery() Handler {
 		defer func() {
 			if err := recover(); err != nil {
 				message := fmt.Sprintf("%s", err)
-				fmt.Printf("[ERROR] %s\n\n", trace(message))
+				log.Printf("[ERROR] %s\n\n", trace(message))
 				c.Fail(http.StatusInternalServerError, "Internal Server Error")
 			}
 		}()

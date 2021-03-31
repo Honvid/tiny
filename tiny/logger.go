@@ -1,15 +1,15 @@
 package tiny
 
 import (
-	"fmt"
+	"log"
 	"time"
 )
 
 func Logger() Handler {
 	return func(c *Context) {
 		t := time.Now()
-		fmt.Printf("[%d] %s in %v\n", c.StatusCode, c.Request.RequestURI, time.Since(t))
+		log.Printf("REQUEST_IN [%d] %s\n", c.StatusCode, c.Request.RequestURI)
 		c.Next()
-		fmt.Printf("[%d] %s in %v\n", c.StatusCode, c.Request.RequestURI, time.Since(t))
+		log.Printf("REQUEST_OUT [%d] %s COST %v\n", c.StatusCode, c.Request.RequestURI, time.Since(t))
 	}
 }

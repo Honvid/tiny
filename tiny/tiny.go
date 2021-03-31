@@ -1,7 +1,6 @@
 package tiny
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 )
@@ -38,7 +37,6 @@ func (e *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			middlewares = append(middlewares, group.middlewares...)
 		}
 	}
-	fmt.Println(r.URL.Path)
 	c := newContext(w, r)
 	c.handlers = middlewares
 	e.router.handle(c)
