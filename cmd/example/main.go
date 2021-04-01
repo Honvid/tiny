@@ -3,12 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"honvid/cmd/example/model"
+	"honvid/pkg/orm"
+	"honvid/pkg/tiny"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
-	"tiny/tiny"
 )
 
 func onlyForV2() tiny.Handler {
@@ -25,6 +27,35 @@ func main() {
 
 	r.GET("/", func(c *tiny.Context) {
 		c.HTML(http.StatusOK, "<h1>Hello world!</h1>")
+	})
+
+	engine, _ := orm.New("mysql", "root:123456@tcp(127.0.0.1:3306)/demo")
+	//defer engine.Close()
+	r.GET("/mysql", func(c *tiny.Context) {
+		s := engine.NewSession().Model(&model.User{})
+		_ = s.DropTable()
+		_ = s.CreateTable()
+		if !s.HasTable(s.RefTable().Name) {
+			c.HTML(http.StatusOK, "failed to create table")
+		}
+		//_, _ = s.Raw("DROP TABLE IF EXISTS User;").Exec()
+		//_, _ = s.Raw("CREATE TABLE User(Name text);").Exec()
+		//_, _ = s.Raw("CREATE TABLE User(Name text);").Exec()
+		//result, _ := s.Raw("INSERT INTO User(`Name`) values (?), (?)", "Tom", "Sam").Exec()
+		//count, _ := result.RowsAffected()
+		//var TestDial, _ = dialect.GetDialect("mysql")
+		//sa := schema.Parse(&model.User{}, TestDial)
+		//if sa.Name != "User" || len(sa.Fields) != 2 {
+		//	c.HTML(http.StatusOK, "failed to parse User struct")
+		//}
+		//c.HTML(http.StatusOK, fmt.Sprint("D--", sa.GetField("Name").Tag))
+		//if sa.GetField("Name").Tag != "PRIMARY KEY" {
+		//	c.HTML(http.StatusOK, fmt.Sprint(sa.GetField("Name").Type))
+		//	//c.HTML(http.StatusOK, "failed to parse primary key")
+		//}
+		//result := s.Raw("SELECT * FROM User WHERE name = ?", "Tom").QueryRow()
+		//c.HTML(http.StatusOK, fmt.Sprint(result))
+
 	})
 
 	r.POST("/hello", func(c *tiny.Context) {
